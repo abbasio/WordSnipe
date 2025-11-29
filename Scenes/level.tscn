@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://bdhy1dm7d7ll0"]
+
+[ext_resource type="Script" uid="uid://m4d370uq7vp0" path="res://Scripts/game.gd" id="1_6phgx"]
+[ext_resource type="Texture2D" uid="uid://dfjikt3nyag46" path="res://Assets/player.png" id="1_tumq0"]
+[ext_resource type="PackedScene" uid="uid://dfsdio17ltiyb" path="res://Scenes/enemy.tscn" id="2_81xng"]
+[ext_resource type="Script" uid="uid://fo3tp5b70kgb" path="res://Scripts/player.gd" id="2_k5f4k"]
+[ext_resource type="FontFile" uid="uid://dgjjitees1ouv" path="res://Assets/monogram.ttf" id="5_wqkje"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5xgho"]
+size = Vector2(32, 32)
+
+[sub_resource type="Curve2D" id="Curve2D_6phgx"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1280, 0, 0, 0, 0, 0, 1280, 720, 0, 0, 0, 0, 0, 720, 0, 0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[node name="Level" type="Node" node_paths=PackedStringArray("enemy_spawn_timer", "enemy_spawn_location", "player")]
+script = ExtResource("1_6phgx")
+enemy_scene = ExtResource("2_81xng")
+enemy_spawn_timer = NodePath("EnemySpawnTimer")
+enemy_spawn_location = NodePath("EnemyPath/EnemySpawnLocation")
+player = NodePath("Player")
+
+[node name="Player" type="Area2D" parent="." node_paths=PackedStringArray("input_text")]
+position = Vector2(656, 336)
+script = ExtResource("2_k5f4k")
+input_text = NodePath("RichTextLabel")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = ExtResource("1_tumq0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("RectangleShape2D_5xgho")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Player"]
+offset_left = -32.0
+offset_top = -40.0
+offset_right = 32.0
+offset_bottom = -16.0
+theme_override_fonts/normal_font = ExtResource("5_wqkje")
+bbcode_enabled = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnemyPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_6phgx")
+
+[node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemyPath"]
+
+[node name="EnemySpawnTimer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="Player" to="Player" method="_on_body_entered"]
