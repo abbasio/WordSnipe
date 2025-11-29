@@ -4,14 +4,23 @@ extends CharacterBody2D
 @export var sprite: AnimatedSprite2D
 @export var player: Area2D
 
-var speed = 30.0
+var speed = 20.0
 var current_letter: Alphabet.letters
+var letter_label: String
+var active: bool = false
 
 func _ready() -> void:
 	current_letter = randi_range(0, 25) as Alphabet.letters
 	sprite.frame = current_letter
+	letter_label = Alphabet.map_enum_to_letter[current_letter]
+	var letter_string = Alphabet.map_enum_to_letter[current_letter]
+	Alphabet.active_enemies[letter_string].append(self)
 
 func _physics_process(_delta: float) -> void:
+	if active:
+		sprite.modulate.a = 1
+	else:
+		sprite.modulate.a = 0.25
 	if player:
 		var direction = global_position.direction_to(player.global_position)
 		velocity = direction * speed

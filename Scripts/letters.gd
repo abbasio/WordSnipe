@@ -1,3 +1,63 @@
 extends Node
 
 enum letters {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z}
+
+var map_enum_to_letter: Dictionary = {
+    letters.A: 'a',
+    letters.B: 'b',
+    letters.C: 'c',
+    letters.D: 'd',
+    letters.E: 'e',
+    letters.F: 'f',
+    letters.G: 'g',
+    letters.H: 'h',
+    letters.I: 'i',
+    letters.J: 'j',
+    letters.K: 'k',
+    letters.L: 'l',
+    letters.M: 'm',
+    letters.N: 'n',
+    letters.O: 'o',
+    letters.P: 'p',
+    letters.Q: 'q',
+    letters.R: 'r',
+    letters.S: 's',
+    letters.T: 't',
+    letters.U: 'u',
+    letters.V: 'v',
+    letters.W: 'w',
+    letters.X: 'x',
+    letters.Y: 'y',
+    letters.Z: 'z',
+}
+
+var enemies: StringName = "enemies"
+
+var active_enemies: Dictionary[String, Array] = {
+    'a': [],
+    'b': [],
+    'c': [],
+    'd': [],
+    'e': [],
+    'f': [],
+    'g': [],
+    'h': [],
+    'i': [],
+    'j': [],
+    'k': [],
+    'l': [],
+    'm': [],
+    'n': [],
+    'o': [],
+    'p': [],
+    'q': [],
+    'r': [],
+    's': [],
+    't': [],
+    'u': [],
+    'v': [],
+    'w': [],
+    'x': [],
+    'y': [],
+    'z': [],
+}

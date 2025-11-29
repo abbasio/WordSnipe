@@ -22,13 +22,24 @@ func _ready() -> void:
 
 func _process(_delta):
 	player.input_text.text = typed_word
+	if Input.is_action_just_pressed("backspace"):
+		typed_word = ""
+		var enemies = get_enemies()
+		for enemy in enemies:
+			enemy.active = false
 	if Input.is_action_just_pressed("submit_word"):
 		var is_word_valid = typed_word in dictionary 
+		var enemies = get_enemies()
 		if is_word_valid:
 			print("Word is valid!")
+			for enemy in enemies:
+				if enemy.active: 
+					enemy.queue_free()
 		else: 
 			print("Word is invalid.")
 		typed_word = ""
+		for enemy in enemies:
+			enemy.active = false
 
 func spawn_enemy():
 	var enemy: Enemy = enemy_scene.instantiate()
@@ -42,6 +53,28 @@ func spawn_enemy():
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and not event.is_pressed():
 		var key_label = event.as_text_physical_keycode()
-		if key_label.length() == 1: 
-			typed_word += key_label.to_lower()
-		print(typed_word)
+		if key_label.length() == 1:
+			var lc_letter = key_label.to_lower()
+			var enemies = get_enemies()
+			var activated = false
+			for enemy in enemies:
+				if enemy.letter_label == lc_letter and !enemy.active:
+					enemy.active = true
+					activated = true
+					break
+			
+			if activated:
+				typed_word += lc_letter
+			else:
+				print("invalid letter")
+
+func get_enemies() -> Array[Node]:
+	return get_tree().get_nodes_in_group(Alphabet.enemies)
+
+# when a letter is spawned, we add it to a global list of existing letters
+# when a letter is typed, we check against that global list
+# if the letter doesn't exist, we error/screenshake/don't type anything
+# if the letter does exist, we need to highlight that letter and type it in to the player's input
+# if there are multiple instances of that letter, we should select the one that is closest to the player
+# once the word is 'submitted', if it is valid, we destroy all of the letters that made up that word
+# if it is not valid, we error/screenshake/reset the player's input

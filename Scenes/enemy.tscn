@@ -196,7 +196,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hghv2"]
 size = Vector2(7, 9)
 
-[node name="Enemy" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
+[node name="Enemy" type="CharacterBody2D" node_paths=PackedStringArray("sprite") groups=["enemies"]]
 scale = Vector2(2, 2)
 collision_mask = 0
 script = ExtResource("1_1f0kj")
