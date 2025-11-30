@@ -45,7 +45,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_754fn"]
 size = Vector2(20, 18)
 
-[node name="Level" type="Node" node_paths=PackedStringArray("enemy_spawn_timer", "enemy_spawn_location", "difficulty_timer", "reminder_text_timer", "player", "score_label", "reminder_label", "arrow", "sfx_key_click", "sfx_letter_hit", "sfx_player_hit")]
+[node name="Level" type="Node" node_paths=PackedStringArray("enemy_spawn_timer", "enemy_spawn_location", "difficulty_timer", "reminder_text_timer", "player", "camera", "score_label", "reminder_label", "arrow", "sfx_key_click", "sfx_letter_hit", "sfx_player_hit")]
 script = ExtResource("1_6phgx")
 enemy_scene = ExtResource("2_81xng")
 enemy_spawn_timer = NodePath("EnemySpawnTimer")
@@ -53,6 +53,7 @@ enemy_spawn_location = NodePath("EnemyPath/EnemySpawnLocation")
 difficulty_timer = NodePath("DifficultyTimer")
 reminder_text_timer = NodePath("ReminderTextTimer")
 player = NodePath("Player")
+camera = NodePath("Camera2D")
 score_label = NodePath("Score")
 reminder_label = NodePath("Reminder")
 arrow = NodePath("Player/Arrow")

@@ -7,6 +7,7 @@ extends Node
 @export var reminder_text_timer: Timer
 
 @export var player: Player
+@export var camera: Camera2D
 @export var score_label: RichTextLabel
 @export var reminder_label: RichTextLabel
 @export var arrow: Sprite2D
@@ -19,6 +20,10 @@ var typed_word: String = ""
 var score: int = 0
 var active_letters: Array[Enemy] = []
 var enemy_speed: float = 10.0
+var max_shake: float = 10.0
+var camera_shake_fade: float = 10.0
+
+var _shake_strength: float = 0.0
 
 func _ready() -> void:
 	SignalBus.player_hit.connect(on_player_hit)
@@ -42,6 +47,9 @@ func _ready() -> void:
 	difficulty_timer.start()
 
 func _process(_delta):
+	if (_shake_strength > 0):
+		_shake_strength = lerp(_shake_strength, 0.0, camera_shake_fade * _delta)
+		camera.offset = Vector2(randf_range(-_shake_strength, _shake_strength), randf_range(-_shake_strength, _shake_strength))
 	if player:
 		player.input_text.text = typed_word
 	if Input.is_action_just_pressed("backspace"):
@@ -49,6 +57,7 @@ func _process(_delta):
 	if Input.is_action_just_pressed("submit_word"):
 		var is_word_valid = typed_word in dictionary 
 		if typed_word.length() <= 2:
+			shake_camera()
 			reminder_label.text = "Words must be 3 or more letters!"
 			sfx_player_hit.play()
 			reminder_text_timer.start()
@@ -56,11 +65,15 @@ func _process(_delta):
 		elif is_word_valid:
 			snipe()
 		else: 
+			shake_camera()
 			reminder_label.text = typed_word + " is an invalid word!"
 			sfx_player_hit.play()
 			reminder_text_timer.start()
 			clear()
 	score_label.text = str(score)	
+
+func shake_camera():
+	_shake_strength = max_shake
 
 func spawn_enemy():
 	var enemy: Enemy = enemy_scene.instantiate()
@@ -135,10 +148,12 @@ func snipe() -> void:
 	clear()	
 
 func on_player_hit() -> void:
+	shake_camera()
 	clear()
 	sfx_player_hit.play()
 
 func game_over() -> void:
+	shake_camera()
 	clear()
 	enemy_spawn_timer.stop()
 	difficulty_timer.stop()

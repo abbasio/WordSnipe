@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="wordsniper"
-run/main_scene="uid://bdhy1dm7d7ll0"
+run/main_scene="uid://by07lp2e26y4m"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 
 [autoload]
