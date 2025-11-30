@@ -9,9 +9,10 @@ extends Node
 var dictionary: Dictionary = {}
 var typed_word: String = ""
 var score: int = 0
-var first_letter: Enemy
+var active_enemies: Array[Enemy] = []
 
 func _ready() -> void:
+	SignalBus.player_hit.connect(clear)
 	# Load words from text file
 	var file = FileAccess.open("res://Assets/words_alpha.txt", FileAccess.READ)
 	var content := file.get_as_text().replace("\r", "").split("\n", false)
@@ -23,16 +24,14 @@ func _ready() -> void:
 	enemy_spawn_timer.start()
 
 func _process(_delta):
+	print(active_enemies)
 	player.input_text.text = typed_word
 	if Input.is_action_just_pressed("backspace"):
-		typed_word = ""
-		var enemies = get_enemies()
-		for enemy in enemies:
-			enemy.active = false
+		clear()
 	if Input.is_action_just_pressed("submit_word"):
 		var is_word_valid = typed_word in dictionary 
 		var enemies = get_enemies()
-		if typed_word.length() <= 1:
+		if typed_word.length() <= 2:
 			print('need longer word')
 		elif is_word_valid:
 			print("Word is valid!")
@@ -42,9 +41,7 @@ func _process(_delta):
 					enemy.queue_free()
 		else: 
 			print("Word is invalid.")
-		typed_word = ""
-		for enemy in enemies:
-			enemy.active = false
+		clear()
 	score_label.text = str(score)	
 
 func spawn_enemy():
@@ -62,16 +59,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		if key_label.length() == 1:
 			var lc_letter = key_label.to_lower()
 			var enemies = get_enemies()
-			var activated = false
+			var closest_valid_enemy = null
 			for enemy in enemies:
 				if enemy.letter_label == lc_letter and !enemy.active:
-					enemy.active = true
-					activated = true
-					if typed_word.is_empty():
-						first_letter = enemy
-					break
+					if !closest_valid_enemy:
+						closest_valid_enemy = enemy
+					else:
+						if (enemy.global_position.distance_to(player.global_position) <= 
+						closest_valid_enemy.global_position.distance_to(player.global_position)):
+							closest_valid_enemy = enemy
 			
-			if activated:
+			if closest_valid_enemy:
+				closest_valid_enemy.active = true
+				active_enemies.append(closest_valid_enemy)
 				typed_word += lc_letter
 			else:
 				print("invalid letter")
@@ -79,6 +79,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func get_enemies() -> Array[Node]:
 	return get_tree().get_nodes_in_group(Alphabet.enemies)
 
+func clear() -> void:
+	typed_word = ""
+	active_enemies = []
+	var enemies = get_enemies()
+	for enemy in enemies:
+		enemy.active = false
 # when a letter is spawned, we add it to a global list of existing letters
 # when a letter is typed, we check against that global list
 # if the letter doesn't exist, we error/screenshake/don't type anything
