@@ -1,11 +1,13 @@
 extends Node
 
 @export var enemy_scene: PackedScene
-@export var orb_scene: PackedScene
 @export var enemy_spawn_timer: Timer
 @export var enemy_spawn_location: PathFollow2D
 @export var player: Player
 @export var score_label: RichTextLabel
+@export var arrow: Sprite2D
+@export var sfx_key_click: AudioStreamPlayer2D
+@export var sfx_letter_hit: AudioStreamPlayer2D
 
 var dictionary: Dictionary = {}
 var typed_word: String = ""
@@ -25,7 +27,6 @@ func _ready() -> void:
 	enemy_spawn_timer.start()
 
 func _process(_delta):
-	print(active_letters)
 	player.input_text.text = typed_word
 	if Input.is_action_just_pressed("backspace"):
 		clear()
@@ -70,6 +71,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				closest_valid_enemy.active = true
 				active_letters.append(closest_valid_enemy)
 				typed_word += lc_letter
+				sfx_key_click.play()
 			else:
 				print("invalid letter")
 
@@ -84,14 +86,18 @@ func clear() -> void:
 		enemy.active = false
 
 func snipe() -> void:
-	var orb = orb_scene.instantiate()
-	orb.global_position = player.global_position
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	for i in range (active_letters.size()):
-		tween.tween_property(orb, "global_position", active_letters[i].global_position, 1)
+		tween.tween_callback(arrow.look_at.bind(active_letters[i].global_position))
+		tween.tween_property(arrow, "global_position", active_letters[i].global_position, 0.15)
+		tween.tween_callback(sfx_letter_hit.play)
 		tween.tween_callback(active_letters[i].queue_free)
-			
+	
+	tween.tween_callback(arrow.look_at.bind(player.global_position))
+	tween.tween_property(arrow, "global_position", player.global_position, 0.15)
 	await tween.finished
+	arrow.rotation = deg_to_rad(-36)
+	print('tween finished')		
 	score += 10 * typed_word.length()
 	clear()	
 

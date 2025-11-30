@@ -1,11 +1,13 @@
-[gd_scene load_steps=13 format=3 uid="uid://bdhy1dm7d7ll0"]
+[gd_scene load_steps=15 format=3 uid="uid://bdhy1dm7d7ll0"]
 
 [ext_resource type="Script" uid="uid://m4d370uq7vp0" path="res://Scripts/game.gd" id="1_6phgx"]
 [ext_resource type="PackedScene" uid="uid://dfsdio17ltiyb" path="res://Scenes/enemy.tscn" id="2_81xng"]
 [ext_resource type="Script" uid="uid://fo3tp5b70kgb" path="res://Scripts/player.gd" id="2_k5f4k"]
-[ext_resource type="PackedScene" uid="uid://o0mjys0j0t8s" path="res://Scenes/orb.tscn" id="3_0f350"]
 [ext_resource type="Texture2D" uid="uid://wvnlreu7akyj" path="res://Assets/prototype_character.png" id="5_0f350"]
 [ext_resource type="FontFile" uid="uid://dgjjitees1ouv" path="res://Assets/monogram.ttf" id="5_wqkje"]
+[ext_resource type="Texture2D" uid="uid://dtvsx7ajgvd5w" path="res://Assets/arrow.png" id="7_8c0lf"]
+[ext_resource type="AudioStream" uid="uid://d0x2lebc5be20" path="res://Assets/key-click.mp3" id="8_754fn"]
+[ext_resource type="AudioStream" uid="uid://dkx3172t0sita" path="res://Assets/letter_hit.wav" id="8_bvt00"]
 
 [sub_resource type="Curve2D" id="Curve2D_6phgx"]
 _data = {
@@ -40,14 +42,16 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_754fn"]
 size = Vector2(20, 18)
 
-[node name="Level" type="Node" node_paths=PackedStringArray("enemy_spawn_timer", "enemy_spawn_location", "player", "score_label")]
+[node name="Level" type="Node" node_paths=PackedStringArray("enemy_spawn_timer", "enemy_spawn_location", "player", "score_label", "arrow", "sfx_key_click", "sfx_letter_hit")]
 script = ExtResource("1_6phgx")
 enemy_scene = ExtResource("2_81xng")
-orb_scene = ExtResource("3_0f350")
 enemy_spawn_timer = NodePath("EnemySpawnTimer")
 enemy_spawn_location = NodePath("EnemyPath/EnemySpawnLocation")
 player = NodePath("Player")
 score_label = NodePath("Score")
+arrow = NodePath("Player/Arrow")
+sfx_key_click = NodePath("sfx_key_click")
+sfx_letter_hit = NodePath("sfx_letter_hit")
 
 [node name="EnemyPath" type="Path2D" parent="."]
 curve = SubResource("Curve2D_6phgx")
@@ -119,5 +123,18 @@ theme_override_font_sizes/font_size = 8
 max_value = 10.0
 step = 1.0
 show_percentage = false
+
+[node name="Arrow" type="Sprite2D" parent="Player"]
+z_index = -1
+rotation = -0.62831855
+texture = ExtResource("7_8c0lf")
+
+[node name="sfx_key_click" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_754fn")
+volume_db = 10.0
+
+[node name="sfx_letter_hit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_bvt00")
+volume_db = 10.0
 
 [connection signal="body_entered" from="Player" to="Player" method="_on_body_entered"]

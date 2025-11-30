@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://lnbrria5irok"
+path="res://.godot/imported/Big Egg collect 1.wav-dc7fcb69d9609447432c8b51aa3cca71.sample"
+
+[deps]
+
+source_file="res://Assets/Big Egg collect 1.wav"
+dest_files=["res://.godot/imported/Big Egg collect 1.wav-dc7fcb69d9609447432c8b51aa3cca71.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
