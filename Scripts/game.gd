@@ -87,7 +87,6 @@ func spawn_enemy():
 func increase_difficulty():
 	enemy_spawn_timer.wait_time = clamp(0.8, enemy_spawn_timer.wait_time - 0.1, enemy_spawn_timer.wait_time)
 	enemy_speed = clamp (enemy_speed, enemy_speed + 5.0, 50)
-	print(enemy_speed)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and not event.is_pressed():
@@ -111,9 +110,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				active_letters.append(closest_valid_enemy)
 				typed_word += lc_letter
 				sfx_key_click.play()
-			else:
-				print("invalid letter")
-
+				
 func get_enemies() -> Array[Node]:
 	return get_tree().get_nodes_in_group(Alphabet.enemies)
 
