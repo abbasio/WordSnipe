@@ -89,7 +89,7 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player"]
 sprite_frames = SubResource("SpriteFrames_wqkje")
 animation = &"idle"
-frame_progress = 0.9817666
+frame_progress = 0.68932354
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 position = Vector2(0, 1)

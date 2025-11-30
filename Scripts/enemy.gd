@@ -6,15 +6,16 @@ extends CharacterBody2D
 
 var speed = 15.0
 var current_letter: Alphabet.letters
+var letters = Alphabet.letters.values()
 var letter_label: String
 var active: bool = false
 
 func _ready() -> void:
-	current_letter = randi_range(0, 25) as Alphabet.letters
+	var rng = RandomNumberGenerator.new()
+	var weights = PackedFloat32Array([2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1])
+	current_letter = letters[rng.rand_weighted(weights)] as Alphabet.letters
 	sprite.frame = current_letter
 	letter_label = Alphabet.map_enum_to_letter[current_letter]
-	var letter_string = Alphabet.map_enum_to_letter[current_letter]
-	Alphabet.active_enemies[letter_string].append(self)
 
 func _physics_process(_delta: float) -> void:
 	if active:
